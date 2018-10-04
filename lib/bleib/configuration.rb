@@ -7,6 +7,7 @@ module Bleib
 
     DEFAULT_CHECK_DATABASE_INTERVAL = 5 # Seconds
     DEFAULT_CHECK_MIGRATIONS_INTERVAL = 5 # Seconds
+    DEFAULT_DATABASE_YML_PATH = 'config/database'
 
     def self.from_environment
       check_database_interval = interval_or_default(
@@ -15,11 +16,12 @@ module Bleib
       )
       check_migrations_interval = interval_or_default(
         ENV['BLEIB_CHECK_MIGRATIONS_INTERVAL'],
-        DEFAULT_CHECK_DATABASE_INTERVAL
+        DEFAULT_CHECK_MIGRATIONS_INTERVAL
       )
 
       database_yml_path = ENV['BLEIB_DATABASE_YML_PATH']
-      database_yml_path ||= locate_database_yaml!
+      database_yml_path ||= File.expand_path('config/database.yml')
+      ensure_database_yml!(database_yml_path)
 
       rails_env = ENV['RAILS_ENV'] || 'development'
 
@@ -64,14 +66,13 @@ module Bleib
       given <= 0 ? default : given
     end
 
-    def self.locate_database_yaml!
-      possible_location = File.expand_path('config/database.yml')
-      return possible_location if File.exist?(possible_location)
+    def self.ensure_database_yml!(path)
+      return if File.exist?(path)
 
       fail DatabaseYmlNotFoundException,
-           'Database.yml not found, set' \
-           'BLEIB_DATABASE_YML_PATH or execute me' \
-           'from the rails root.'
+           'database.yml not found, set or fix' \
+           ' BLEIB_DATABASE_YML_PATH or execute me' \
+           ' from the rails root.'
     end
 
     def self.rails_database(database_yml_path, rails_env)
