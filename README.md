@@ -35,11 +35,11 @@ Bleib's behaviour is configured via the environment:
 | BLEIB_DATABASE_YML_PATH         | config/database.yml | Path to database.yml. Bleib needs this to perform database readiness checks without booting the whole rails environment. |
 | BLEIB_LOG_LEVEL                 | info                | Set this to `debug` to investigate why bleib is hanging.                                                                 |
 
-## Caveats
+# Caveats
 
 * Can only handle postresql. It's simple to add further adapters, see `Bleib::Database#database_down?` and `Bleib::Configuration#check!`
 
-## Testing
+# Testing
 
 Done by hand so far.
 
