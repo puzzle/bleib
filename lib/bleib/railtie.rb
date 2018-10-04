@@ -1,5 +1,7 @@
-class Bleib::Railtie < Rails::Railtie
-  rake_tasks do
-    load 'tasks/bleib.rake'
+module Bleib
+  class Railtie < Rails::Railtie
+    rake_tasks do
+      load 'tasks/bleib.rake'
+    end
   end
 end

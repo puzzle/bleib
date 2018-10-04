@@ -8,14 +8,21 @@ module Bleib
     DEFAULT_CHECK_MIGRATIONS_INTERVAL = 5_000
 
     def self.from_environment
+      check_database_interval = ENV['BLEIB_CHECK_DATABASE_INTERVAL']
+      check_database_interval ||= DEFAULT_CHECK_DATABASE_INTERVAL
+      check_migrations_interval = ENV['BLEIB_CHECK_MIGRATIONS_INTERVAL']
+      check_migrations_interval ||= DEFAULT_CHECK_MIGRATIONS_INTERVAL
+
       new(
         rails_database,
-        check_database_interval: ENV['BLEIB_CHECK_DATABASE_INTERVAL'] || DEFAULT_CHECK_DATABASE_INTERVAL,
-        check_migrations_interval: ENV['BLEIB_CHECK_MIGRATIONS_INTERVAL'] || DEFAULT_CHECK_MIGRATIONS_INTERVAL
+        check_database_interval: check_database_interval,
+        check_migrations_interval: check_migrations_interval
       )
     end
 
-    def initialize(database_configuration, check_database_interval: DEFAULT_CHECK_DATABASE_INTERVAL, check_migrations_interval: DEFAULT_CHECK_MIGRATIONS_INTERVAL)
+    def initialize(database_configuration,
+                   check_database_interval: DEFAULT_CHECK_DATABASE_INTERVAL,
+                   check_migrations_interval: DEFAULT_CHECK_MIGRATIONS_INTERVAL)
       # To be 100% sure which connection the
       # active record pool creates, returns or removes.
       only_one_connection = { 'pool' => 1 }
@@ -34,9 +41,8 @@ module Bleib
       # We should add clean rescue statements to `Bleib::Database#database_down?`
       # To support other adapters.
       if @database['adapter'] != 'postgresql'
-        raise UnsupportedAdapterException.new(
-                "Unknown database adapter #{@database['adapter']}"
-              )
+        fail UnsupportedAdapterException,
+             "Unknown database adapter #{@database['adapter']}"
       end
     end
 

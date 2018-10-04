@@ -5,24 +5,24 @@ module Bleib
     end
 
     def wait_until_done
-      while pending_migrations?
-        sleep configuration.check_migrations_interval
-      end
+      wait while pending_migrations?
     end
 
     private
 
+    def wait
+      sleep(@configuration.check_migrations_interval)
+    end
+
     def pending_migrations?
-      begin
-        if apartment_gem?
-          in_all_tenant_contexts { check_migrations! }
-        else
-          check_migrations!
-        end
-        false
-      rescue ActiveRecord::PendingMigrationError
-        true
+      if apartment_gem?
+        in_all_tenant_contexts { check_migrations! }
+      else
+        check_migrations!
       end
+      false
+    rescue ActiveRecord::PendingMigrationError
+      true
     end
 
     def apartment_gem?
