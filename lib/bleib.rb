@@ -1,4 +1,5 @@
 require 'bleib/version'
+
 require 'bleib/railtie' if defined?(Rails)
 
 require 'bleib/configuration'

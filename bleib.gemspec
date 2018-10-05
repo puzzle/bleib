@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
                   'another component takes care of migrating the database.'
   s.authors     = ['Puzzle ITC']
   s.email       = 'raez@puzzle.ch'
-  s.files       = ['lib/bleib.rb']
+  s.files       = Dir['lib/**/*']
   s.metadata    = {
                     'source_code_uri'   => 'https://github.com/puzzle/bleib',
                     'documentation_uri' => 'https://github.com/puzzle/bleib'
