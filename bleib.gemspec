@@ -1,6 +1,8 @@
+require_relative 'lib/bleib/version'
+
 Gem::Specification.new do |s|
   s.name        = 'bleib'
-  s.version     = '0.0.3'
+  s.version     = Bleib::VERSION
   s.date        = '2018-10-04'
   s.summary     = 'Use a rake task to wait on database and migrations.'
   s.description = 'Intended for use in containerized setups where' \
