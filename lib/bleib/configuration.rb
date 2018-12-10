@@ -9,6 +9,8 @@ module Bleib
     DEFAULT_CHECK_MIGRATIONS_INTERVAL = 5 # Seconds
     DEFAULT_DATABASE_YML_PATH = 'config/database'
 
+    SUPPORTED_ADAPTERS = %w(postgresql postgis)
+
     def self.from_environment
       check_database_interval = interval_or_default(
         ENV['BLEIB_CHECK_DATABASE_INTERVAL'],
@@ -85,10 +87,10 @@ module Bleib
       # We should add clean rescue statements to
       # `Bleib::Database#database_down?`to support
       # other adapters.
-      if @database['adapter'] != 'postgresql'
-        fail UnsupportedAdapterException,
-             "Unknown database adapter #{@database['adapter']}"
-      end
+      return if SUPPORTED_ADAPTERS.include?(@database['adapter'])
+
+      fail UnsupportedAdapterException,
+           "Unknown database adapter #{@database['adapter']}"
     end
   end
 end
