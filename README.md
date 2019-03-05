@@ -36,7 +36,7 @@ Bleib's behaviour is configured via the environment:
 | BLEIB_LOG_LEVEL                 | info                | Set this to `debug` to investigate why bleib is hanging.                                                                 |
 
 # Caveats
-p
+
 * Handles the `postresql`, `postgis` and `mysql2` database adapters.
   It's simple to add further adapters, see `Bleib::Database#database_down_exception?` and `Bleib::Configuration#check!`
 
