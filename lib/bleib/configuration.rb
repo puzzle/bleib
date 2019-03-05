@@ -9,7 +9,7 @@ module Bleib
     DEFAULT_CHECK_MIGRATIONS_INTERVAL = 5 # Seconds
     DEFAULT_DATABASE_YML_PATH = 'config/database'
 
-    SUPPORTED_ADAPTERS = %w(postgresql postgis)
+    SUPPORTED_ADAPTERS = %w(postgresql postgis mysql2)
 
     def self.from_environment
       check_database_interval = interval_or_default(

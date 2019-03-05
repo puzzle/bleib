@@ -37,7 +37,8 @@ Bleib's behaviour is configured via the environment:
 
 # Caveats
 
-* Can only handle postresql/postgis. It's simple to add further adapters, see `Bleib::Database#database_down?` and `Bleib::Configuration#check!`
+* Handles the `postresql`, `postgis` and `mysql2` database adapters.
+  It's simple to add further adapters, see `Bleib::Database#database_down_exception?` and `Bleib::Configuration#check!`
 
 # Testing
 

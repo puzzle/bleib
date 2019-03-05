@@ -40,26 +40,38 @@ module Bleib
       logger.debug('Database check succeeded')
 
       false
-    rescue PG::ConnectionBad => e
-      # On stopped database:
-      #   PG::ConnectionBad: could not connect to server: Connection refused
-      #   Is the server running on host "127.0.0.1" and accepting
-      #   TCP/IP connections on port 5432?
-      # On wrong/missing user:
-      #   PG::ConnectionBad: FATAL:  password authentication failed for user "wrong"
-      # On wrong password:
-      #   PG::ConnectionBad: FATAL:  password authentication failed for user "user"
+    rescue Exception => e
+      raise e unless database_down_exception?(e)
 
       logger.debug("Database check failed: #{e}")
-
       true
-    rescue ActiveRecord::NoDatabaseError
-      # On missing database:
-      #   ActiveRecord::NoDatabaseError: FATAL:  database "wrong" does not exist
+    end
 
-      logger.debug("Database check failed: #{e}")
-
-      true
+    def database_down_exception?(exception)
+      # Matching by class name because only constants defined by
+      # the used database adapter will be loaded.
+      case exception.class.name
+      when 'PG::ConnectionBad'
+        # On stopped database:
+        #   PG::ConnectionBad: could not connect to server: Connection refused
+        #   Is the server running on host "127.0.0.1" and accepting
+        #   TCP/IP connections on port 5432?
+        # On wrong/missing user/password:
+        #   PG::ConnectionBad: FATAL:  password authentication failed for user "wrong"
+        true
+      when 'Mysql2::Error'
+        # On stopped database:
+        #   Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+        # On wrong/missing user/password:
+        #   Access denied for user 'sraeze'@'localhost' (using password: YES)
+        true
+      when 'ActiveRecord::NoDatabaseError'
+        # On missing database:
+        #   ActiveRecord::NoDatabaseError: FATAL:  database "wrong" does not exist
+        true
+      else
+        false
+      end
     end
 
     def remove_connection
