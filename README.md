@@ -19,7 +19,7 @@ for migrations or DB redeployments to finish.
 
 # How to
 
-* Add the gem to your application: `gem 'bleib', '0.0.8'`
+* Add the gem to your application: `gem 'bleib', '0.0.9'`
 * Build your application image.
 * Add an `initContainer` that's based on your application image to your application `Pod`.
 * Set the command of the `initContainer` to `rake wait_for_migrations`.
@@ -36,7 +36,7 @@ Bleib's behaviour is configured via the environment:
 | BLEIB_LOG_LEVEL                 | info                | Set this to `debug` to investigate why bleib is hanging.                                                                 |
 
 # Caveats
-
+p
 * Handles the `postresql`, `postgis` and `mysql2` database adapters.
   It's simple to add further adapters, see `Bleib::Database#database_down_exception?` and `Bleib::Configuration#check!`
 
