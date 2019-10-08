@@ -34,6 +34,7 @@ Bleib's behaviour is configured via the environment:
 | BLEIB_CHECK_MIGRATIONS_INTERVAL | 5                   | Seconds to wait between migration readiness checks                                                                       |
 | BLEIB_DATABASE_YML_PATH         | config/database.yml | Path to database.yml. Bleib needs this to perform database readiness checks without booting the whole rails environment. |
 | BLEIB_LOG_LEVEL                 | info                | Set this to `debug` to investigate why bleib is hanging.                                                                 |
+| BLEIB_DEFAULT_TENANT            | public              | Name of well-known always existing Tenant. This depends on the strategy you use with Apartment and your RDBMS. |
 
 # Caveats
 
