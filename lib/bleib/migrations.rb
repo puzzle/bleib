@@ -54,11 +54,10 @@ module Bleib
     end
 
     def in_all_tenant_contexts
-      tenants = []
-      tenants << ENV.fetch('BLEIB_DEFAULT_TENANT', 'public')
-      Apartment::Tenant.each { |tenant| tenants << tenant }
+      tenants = [ENV.fetch('BLEIB_DEFAULT_TENANT', 'public')] +
+                Apartment.tenant_names
 
-      tenants.each do |tenant|
+      tenants.uniq.each do |tenant|
         Apartment::Tenant.switch(tenant) do
           yield
         end
