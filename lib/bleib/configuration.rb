@@ -79,8 +79,17 @@ module Bleib
 
     def self.rails_database(database_yml_path, rails_env)
       contents = File.read(database_yml_path)
-      config = YAML.load(ERB.new(contents).result)
+      config = load_yaml(ERB.new(contents).result)
       config[rails_env]
+    end
+
+    # Psych 4 Patch: https://github.com/rails/rails/commit/179d0a1f474ada02e0030ac3bd062fc653765dbe
+    def self.load_yaml(content)
+      begin
+        YAML.load(content, aliases: true)
+      rescue ArgumentError
+        YAML.load(content)
+      end
     end
 
     def check!
