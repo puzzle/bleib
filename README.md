@@ -1,6 +1,6 @@
 # Bleib
 
-# About
+## About
 
 With bleib, your Rails application gains two new rake tasks:
 
@@ -17,14 +17,14 @@ a `Job` or one of the `Pod`s.
 Using bleib `initContainer`s, dependent Rails `Pod`s (say job workers or multiple replicas) can wait 
 for migrations or DB redeployments to finish.
 
-# How to
+## How to
 
 * Add the gem to your application: `gem 'bleib', '0.0.11'`
 * Build your application image.
 * Add an `initContainer` that's based on your application image to your application `Pod`.
 * Set the command of the `initContainer` to `rake wait_for_migrations`.
 
-## Configuration
+### Configuration
 
 Bleib's behaviour is configured via the environment:
 
@@ -36,12 +36,12 @@ Bleib's behaviour is configured via the environment:
 | BLEIB_LOG_LEVEL                 | info                | Set this to `debug` to investigate why bleib is hanging.                                                                 |
 | BLEIB_DEFAULT_TENANT            | public              | Name of well-known always existing Tenant. This depends on the strategy you use with Apartment and your RDBMS. |
 
-# Caveats
+## Caveats
 
 * Handles the `postresql`, `postgis` and `mysql2` database adapters.
   It's simple to add further adapters, see `Bleib::Database#database_down_exception?` and `Bleib::Configuration#check!`
 
-# Testing
+## Testing
 
 Done by hand so far.
 
