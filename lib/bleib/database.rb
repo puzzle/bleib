@@ -65,6 +65,9 @@ module Bleib
         # On wrong/missing user/password:
         #   Access denied for user 'sraeze'@'localhost' (using password: YES)
         true
+      when 'ActiveRecord::ConnectionNotEstablished'
+        # On stopped database:
+        #   connection to server at "postgresql", port 5432 failed: Connection refused
       when 'ActiveRecord::NoDatabaseError'
         # On missing database:
         #   ActiveRecord::NoDatabaseError: FATAL:  database "wrong" does not exist
