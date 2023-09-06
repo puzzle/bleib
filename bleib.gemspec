@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version     = Bleib::VERSION
   s.date        = '2018-10-04'
   s.summary     = 'Use a rake task to wait on database and migrations.'
-  s.description = 'Intended for use in containerized setups where' \
+  s.description = 'Intended for use in containerized setups where ' \
                   'another component takes care of migrating the database.'
   s.authors     = ['Puzzle ITC']
   s.email       = 'viehweger@puzzle.ch'
@@ -14,6 +14,6 @@ Gem::Specification.new do |s|
     'source_code_uri' => 'https://github.com/puzzle/bleib',
     'documentation_uri' => 'https://github.com/puzzle/bleib'
   }
-  s.homepage    = 'http://rubygems.org/gems/bleib'
+  s.homepage    = 'https://rubygems.org/gems/bleib'
   s.license     = 'MIT'
 end
