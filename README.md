@@ -7,8 +7,9 @@ With bleib, your Rails application gains two new rake tasks:
 * `wait_for_database` - waits until the database is running and the configured user can access it
 * `wait_for_migrations` - performs `wait_for_database`, then waits until all migrations are up
 
-Bleib knows about the [Apartment gem](https://github.com/influitive/apartment) - if your project 
-includes it, it will also check migrations on tenants.
+Bleib knows about the [Apartment gem](https://github.com/influitive/apartment) - if your project
+includes it, it will also check migrations on tenants. Likewise, it knows about the
+[Wagons gem](https://github.com/puzzle/wagons) and checks for migrations in all known wagons.
 
 This was built to be used in kubernetes/OpenShift deployments without a zero downtime approach.
 
