@@ -4,17 +4,18 @@
 
 With bleib, your Rails application gains two new rake tasks:
 
-* `wait_for_database` - waits until the database is running and the configured user can access it
-* `wait_for_migrations` - performs `wait_for_database`, then waits until all migrations are up
+* `bleib:wait_for_database` - waits until the database is running and the configured user can access it
+* `bleib:wait_for_migrations` - performs `bleib:wait_for_database`, then waits until all migrations are up
 
-Bleib knows about the [Apartment gem](https://github.com/influitive/apartment) - if your project 
-includes it, it will also check migrations on tenants.
+Bleib knows about the [Apartment gem](https://github.com/influitive/apartment) - if your project
+includes it, it will also check migrations on tenants. Likewise, it knows about the
+[Wagons gem](https://github.com/puzzle/wagons) and checks for migrations in all known wagons.
 
 This was built to be used in kubernetes/OpenShift deployments without a zero downtime approach.
 
-It allows you to `kubectl apply` your multi-Rails-pod configuration and delegate migrations to either 
-a `Job` or one of the `Pod`s. 
-Using bleib `initContainer`s, dependent Rails `Pod`s (say job workers or multiple replicas) can wait 
+It allows you to `kubectl apply` your multi-Rails-pod configuration and delegate migrations to either
+a `Job` or one of the `Pod`s.
+Using bleib `initContainer`s, dependent Rails `Pod`s (say job workers or multiple replicas) can wait
 for migrations or DB redeployments to finish.
 
 ## How to
@@ -22,7 +23,9 @@ for migrations or DB redeployments to finish.
 * Add the gem to your application: `gem 'bleib'`
 * Build your application image.
 * Add an `initContainer` that's based on your application image to your application `Pod`.
-* Set the command of the `initContainer` to `rake wait_for_migrations`.
+* Set the command of the `initContainer` to `rake bleib:wait_for_migrations`.
+* Add some way to migrate the database so that the waiting actually pays off at some point.
+* The migrations can be run after `rake bleib:wait_for_database` sees a connection.
 
 ### Configuration
 
@@ -38,7 +41,7 @@ Bleib's behaviour is configured via the environment:
 
 ## Caveats
 
-* Handles the `postresql`, `postgis` and `mysql2` database adapters.
+* Handles the `postgresql`, `postgis` and `mysql2` database adapters.
   It's simple to add further adapters, see `Bleib::Database#database_down_exception?` and `Bleib::Configuration#check!`
 
 ## Testing
@@ -47,3 +50,12 @@ Done by hand so far.
 
 If I had a magic wand, I'd do integration tests of `Bleib::Database` and `Bleib::Migrations` against
 a database container in various states (up, down, preloaded with dumps of different migration states).
+
+## ToDo (patches welcome)
+
+- [ ] add a basic rspec skeleton
+- [ ] add (mocked) specs for `Bleib::Migrations`
+- [ ] add (mocked) specs for `Bleib::Database`
+- [ ] add integration test for `Bleib::Database`
+- [ ] add integration test for `Bleib::Migrations`
+- [ ] add specs for `Bleib::Configuration`
