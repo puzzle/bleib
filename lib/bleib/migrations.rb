@@ -2,15 +2,16 @@ module Bleib
   # Finds out if all migrations are up.
   #
   # Knows how to handle multitenancy with Apartment, if used.
+  # Checks also migrations with Wagons, if used.
   class Migrations
     def initialize(configuration)
       @configuration = configuration
     end
 
     def wait_until_done
-      logger.info('Waiting for migrations' \
-                   ' (Also checking apartment tenants:' \
-                   " #{apartment_gem? ? 'yes' : 'no'})")
+      logger.info('Waiting for migrations')
+      logger.info('Also checking apartment tenants:' + " #{apartment_gem? ? 'yes' : 'no'}")
+      logger.info('Also checking wagon migrations:' + " #{wagons_gem? ? 'yes' : 'no'}")
 
       wait while pending_migrations?
 
@@ -49,8 +50,22 @@ module Bleib
       defined?(Apartment::Tenant)
     end
 
+    def wagons_gem?
+      defined?(Wagons)
+    end
+
     def check_migrations!
+      check_wagon_migrations! if wagons_gem?
       ActiveRecord::Migration.check_pending!
+    end
+
+    def check_wagon_migrations!
+      paths = Wagons.all.flat_map(&:migrations_paths)
+      context = ActiveRecord::MigrationContext.new(paths, ActiveRecord::SchemaMigration)
+
+      # we do not need the correct output, just the right exception
+      # in this case, the output only considers the main-app migration, not the ones in wagons
+      raise ActiveRecord::PendingMigrationError if context.needs_migration?
     end
 
     def in_all_tenant_contexts(&block)
