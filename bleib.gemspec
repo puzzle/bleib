@@ -10,10 +10,9 @@ Gem::Specification.new do |s|
   s.authors     = ['Puzzle ITC']
   s.email       = 'viehweger@puzzle.ch'
   s.files       = Dir['lib/**/*']
-  s.metadata    = {
-    'source_code_uri' => 'https://github.com/puzzle/bleib',
-    'documentation_uri' => 'https://github.com/puzzle/bleib'
-  }
-  s.homepage    = 'https://rubygems.org/gems/bleib'
+  s.metadata    = { 'source_code_uri' => 'https://github.com/puzzle/bleib' }
+  s.homepage    = 'https://github.com/puzzle/bleib'
   s.license     = 'MIT'
+
+  s.required_ruby_version = '> 3.0'
 end
