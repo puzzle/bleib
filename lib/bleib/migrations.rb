@@ -53,14 +53,12 @@ module Bleib
       ActiveRecord::Migration.check_pending!
     end
 
-    def in_all_tenant_contexts
+    def in_all_tenant_contexts(&block)
       tenants = [ENV.fetch('BLEIB_DEFAULT_TENANT', 'public')] +
                 Apartment.tenant_names
 
       tenants.uniq.each do |tenant|
-        Apartment::Tenant.switch(tenant) do
-          yield
-        end
+        Apartment::Tenant.switch(tenant, &block)
       end
     end
 
