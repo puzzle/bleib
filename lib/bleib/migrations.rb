@@ -56,7 +56,13 @@ module Bleib
 
     def check_migrations!
       check_wagon_migrations! if wagons_gem?
-      ActiveRecord::Migration.check_pending!
+
+      # https://apidock.com/rails/v7.1.3.4/ActiveRecord/Migration/check_pending
+      if Rails::VERSION::MAJOR < 7 || (Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR.zero?)
+        ActiveRecord::Migration.check_pending!
+      else
+        ActiveRecord::Migration.check_all_pending!
+      end
     end
 
     def check_wagon_migrations!
