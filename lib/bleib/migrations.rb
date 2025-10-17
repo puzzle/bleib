@@ -67,8 +67,11 @@ module Bleib
 
     def check_wagon_migrations!
       paths = Wagons.all.flat_map(&:migrations_paths)
-      context = ActiveRecord::MigrationContext.new(paths, ActiveRecord::SchemaMigration)
-
+      context = if Gem::Version.new(Rails::VERSION::STRING) < Gem::Version.new('7.1.0')
+                  ActiveRecord::MigrationContext.new(paths, ActiveRecord::SchemaMigration)
+                else
+                  ActiveRecord::MigrationContext.new(paths)
+                end
       # we do not need the correct output, just the right exception
       # in this case, the output only considers the main-app migration, not the ones in wagons
       raise ActiveRecord::PendingMigrationError if context.needs_migration?
