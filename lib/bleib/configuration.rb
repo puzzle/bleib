@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'active_record/database_configurations'
+
 module Bleib
   class Configuration
     class UnsupportedAdapterException < Exception; end
@@ -10,6 +14,8 @@ module Bleib
     DEFAULT_DATABASE_YML_PATH = 'config/database'
 
     SUPPORTED_ADAPTERS = %w(postgresql postgis mysql2)
+
+    POOL_KEYS = %w(pool max_connections min_connections).freeze
 
     def self.from_environment
       check_database_interval = interval_or_default(
@@ -39,9 +45,9 @@ module Bleib
                    check_migrations_interval: DEFAULT_CHECK_MIGRATIONS_INTERVAL)
       # To be 100% sure which connection the
       # active record pool creates, returns or removes.
-      only_one_connection = { 'pool' => 1 }
-
-      @database = database_configuration.merge(only_one_connection)
+      @database = database_configuration
+                  .reject { |key, _| POOL_KEYS.include?(key.to_s) }
+                  .merge(single_connection_key => 1)
 
       @check_database_interval = check_database_interval
       @check_migrations_interval = check_migrations_interval
@@ -62,6 +68,14 @@ module Bleib
     end
 
     private
+
+    def single_connection_key
+      # Rails >= 8.1 renamed `pool` to `max_connections` and aborts when both are set.
+      hash_config = ActiveRecord::DatabaseConfigurations::HashConfig
+      return 'max_connections' if hash_config.method_defined?(:min_connections)
+
+      'pool'
+    end
 
     def self.interval_or_default(string, default)
       given = string.to_i
